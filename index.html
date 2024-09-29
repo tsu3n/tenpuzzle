@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>テンパズル</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/codeblock.css">
+  <link rel="stylesheet" href="css/layout.css">
+</head>
+
+<body>
+  <header class="container-lg min-vh-100 w-100 header" id="header">
+    <div>
+      <h1 class="display-1 fw-bold">テンパズル</h1>
+      <h2 class="display-5 fw-medium text-secondary">4つの数字から10を作る</h2>
+    </div>
+
+    <ul class="w-100 list-unstyled rule-list">
+      <li>
+        <span class="fs-5">四則演算の使用</span>
+        <pre
+          class="code-block mt-2"><span class="comment">// OK</span>
+<span class="number">2</span> + <span class="number">0</span> + <span class="number">2</span> &times; <span class="number">4</span></pre>
+      </li>
+
+      <li>
+        <span class="fs-5">数字の並び替え</span>
+        <pre
+          class="code-block mt-2"><span class="comment">// OK</span>
+<span class="number">2</span> + <span class="number">0</span> + <span class="number">2</span> &times; <span class="number">4</span></pre>
+      </li>
+
+      <li>
+        <span class="fs-5">括弧の使用</span>
+        <pre class="code-block mt-2"><span class="comment">// OK</span>
+2 - (0 - (2 * 4))</pre>
+      </li>
+
+      <li>
+        <span class="fs-5">数字を繋げてはいけない</span>
+        <pre
+          class="code-block mt-2"><code><span class="comment">// NG</span><br><span class="error">11</span> + 0 - 1</code></pre>
+      </li>
+
+      <li>
+        <span class="fs-5">マイナス記号を使ってはいけない</span>
+        <pre class="code-block mt-2"><span class="comment">//aaa</span>
+<span class="error">-</span><span class="number">1</span> + <span class="number">2</span></pre>
+      </li>
+    </ul>
+
+    <a class="btn btn-outline-dark d-inline-block" href="#play">プレイ</a>
+
+  </header>
+
+  <div class="modal" id="keybord">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div>
+          数字を入力<kbd>0</kbd>-<kbd>9</kbd>
+          左括弧<kbd>Shift</kbd><kbd>8</kbd>
+          右括弧<kbd>Shift</kbd><kbd>9</kbd>
+          答え合わせ<kbd>Enter</kbd>
+          カーソル左に移動<kbd>h</kbd>
+          カーソル右に移動<kbd>l</kbd>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="container-lg min-vh-100 w-100 play" id="play">
+    <div class="d-flex justify-content-center" id="generate-question-div">
+      <button class="btn btn-primary btn-lg flex-shrink-1" id="generate-question-button">問題生成</button>
+    </div>
+
+    <div class="d-none" id="question-div">
+      <span class="display-1 font-monospace" id="question-numbers-span"></span>
+      <span class="display-1 text-secondary font-monospace ms-3">-> ? -> 10</span>
+
+      <form class="d-flex max-width-100" id="answer-form">
+        <div class="position-relative flex-grow-1 editor-wrap">
+          <pre class="editor-preformatted-text" id="editor-pre" aria-hidden="true"></pre>
+          <input class="position-absolute top-0 editor-input" id="editor-input" name="answer" spellcheck="false"
+            type="text" style="caret-color: white;">
+        </div>
+        <button class="btn btn-outline-primary ms-3" id="check-answer-button" type="submit"
+          style="height:48px">答え合わせ</button>
+      </form>
+
+      <ul class="list-unstyled">
+        <li>
+          <code class="text-body fs-6">&times;</code>(掛け算)は<kbd>*</kbd>
+        </li>
+        <li></li>
+        <code class="text-body fs-6">&divide;</code>(掛け算)は<kbd>/</kbd>で入力
+        </li>
+      </ul>
+
+    </div>
+
+  </main>
+
+  <div class="modal" id="correctModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+        <span class="display-1 text-success">正解</span>
+      </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button" id="currect-modal-close-button">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="incorrectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="p-2">
+          <div class="modal-body">
+          <span class="text-danger">不正解</span>
+          <span id="incorrect-modal-result-span"></span>
+        </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">閉じる</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+  <script src="./js/index.js" type="module"></script>
+  <script src="./js/editor/editor.js" type="module"></script>
+
+  <!-- <script>
+
+
+
+
+    const b = document.getElementById('b')
+    b.addEventListener('click', () => edit(editor.value))
+
+    function isNumeric(str) {
+      return /^\d+$/.test(str);
+    }
+    function edit(value) {
+
+
+      const code = value;
+
+
+      // トークンを抽出するための正規表現
+      //const regex = /\s*(=>|{|}|;|[(),]|[+\-*\/]|\d+|[a-zA-Z_][a-zA-Z0-9_]*)\s*/g;
+      //const regex = /([0-9]+|[\+\-\*\/]+|[()]{1}|[^[0-9\+\-\*\/()]+)/g;
+      const regex = /(\d+)|([\+\-\*\/\(\)])|([^\d\+\-\*\/\(\)\s]+)|(\s+)/
+
+
+      // トークンの抽出
+      //const tokens = code.match(regex);
+      // tokenize
+      const tokens = code.split(regex)
+        .filter(Boolean)
+        .map(value => {
+          let type = 'I';
+          let t_value = value;
+          if (isNumeric(value)) {
+
+
+            type = TOKEN_TYPE.NUMBER
+            t_value = value
+          }
+
+          if (value === '+') {
+
+            type = TOKEN_TYPE.ADD
+
+          }
+
+          if (value === '-') {
+
+            type = TOKEN_TYPE.SUB
+
+          }
+
+          if (value === '*') {
+
+            type = TOKEN_TYPE.MULTI
+
+          }
+
+          if (value === '/') {
+
+            type = TOKEN_TYPE.DIV
+
+          }
+
+          if (value === '(') {
+
+            type = TOKEN_TYPE.LEFT_PAREN
+
+          }
+
+          if (value === ')') {
+
+            type = TOKEN_TYPE.RIGHT_PAREN
+
+          }
+          console.log(t_value)
+
+          if (t_value === undefined) {
+            return {
+              type: type
+            }
+          } else {
+            return {
+
+              type: type,
+              value: t_value
+            }
+          }
+        }
+        )
+
+      // 結果を表示
+
+      console.log(parse(tokens))
+      const output = document.createElement('code')
+
+      for (const token of tokens) {
+        if (token.type === TOKEN_TYPE.NUMBER) {
+          const span = document.createElement('span')
+          span.classList.add('number')
+          if (token.value > 10) {
+            span.classList.add('error')
+          }
+          span.appendChild(document.createTextNode(token.value))
+          output.appendChild(span)
+          continue;
+        }
+
+        if (token.type === TOKEN_TYPE.ADD || token.type === TOKEN_TYPE.SUB || token.type === TOKEN_TYPE.MULTI || token.type === TOKEN_TYPE.DIV || token.type === TOKEN_TYPE.LEFT_PAREN || token.type === TOKEN_TYPE.RIGHT_PAREN) {
+          /*const span = document.createElement('span')
+          span.classList.add('operator')
+          if (token.value === '*') {
+            span.innerHTML = '&times;'
+          } else if (token.value === '/') {
+            span.innerHTML = '&divide;'
+          } else {
+            span.appendChild(document.createTextNode(token.value))
+          }
+          output.appendChild(span)
+          continue;
+        }*/
+          let html;
+          switch (token.type) {
+            case TOKEN_TYPE.ADD:
+              html = '&plus;'
+              break;
+            case TOKEN_TYPE.SUB:
+              html = '&minus;'
+              break;
+            case TOKEN_TYPE.MULTI:
+              html = '&times;'
+              break;
+            case TOKEN_TYPE.DIV:
+              html = '&divide;'
+              break;
+            case TOKEN_TYPE.LEFT_PAREN:
+              html = '&lpar;'
+              break;
+            case TOKEN_TYPE.RIGHT_PAREN:
+              html = '&rpar;'
+              break;
+          }
+          const span = document.createElement('span')
+          span.classList.add('operator')
+          span.innerHTML = html
+          output.appendChild(span)
+          continue;
+        }
+
+        if (/^\s+$/.test(token.value)) {
+          const span = document.createElement('span')
+          span.classList.add('space')
+          span.appendChild(document.createTextNode(token.value))
+          output.appendChild(span)
+          continue;
+        }
+
+        const span = document.createElement('span')
+        span.classList.add('error')
+        span.appendChild(document.createTextNode(token.value))
+        output.appendChild(span)
+        continue;
+
+
+
+      }
+
+      return output
+    };
+
+
+
+    class Lexer {
+      constructor(input) {
+        this.input = input;
+        this.index = 0;
+      }
+
+      scanAll() {
+
+      }
+
+
+    }
+
+    function parse(tokens) {
+      const output = [];
+      const stack = [];
+
+      for (const token of tokens) {
+        const type = token.type;
+
+        switch (type) {
+          case TOKEN_TYPE.NUMBER:
+            output.push(token);
+            break;
+          case TOKEN_TYPE.ADD:
+          case TOKEN_TYPE.SUB:
+          case TOKEN_TYPE.MULTI:
+          case TOKEN_TYPE.DIV:
+            console.warn(stack.length > 0 && precedence(stack[stack.length - 1] >= precedence(token)))
+            while (stack.length > 0 && precedence(stack[stack.length - 1] >= precedence(token))) {
+              output.push(stack.pop());
+            }
+            stack.push(token);
+            break;
+        }
+      }
+      console.log(stack, output)
+
+
+      return output.concat(stack);
+    }
+
+    function precedence(token) {
+      switch (token.type) {
+        case TOKEN_TYPE.ADD:
+        case TOKEN_TYPE.SUB:
+          return 1;
+        case TOKEN_TYPE.MULTI:
+        case TOKEN_TYPE.DIV:
+          return 2;
+        default:
+          return 0;
+      }
+    }
+    const TOKEN_TYPE = {
+      NUMBER: 'NUMBER',
+      ADD: 'ADD',
+      SUB: 'SUB',
+      MULTI: 'MINUS',
+      DIV: 'DIV',
+
+      LEFT_PAREN: 'LPAR',
+      RIGHT_PAREN: 'RPAR',
+
+      WHITE_SPACE: ''
+    };
+  </script>
+
+  <script>
+    // 答え合わせ
+
+  </script> -->
+</body>
+
+</html>

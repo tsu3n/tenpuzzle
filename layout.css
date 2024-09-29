@@ -1,0 +1,21 @@
+.header {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  place-content: center;
+}
+
+.rule-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.play {
+  display: grid;
+  gap:2rem;
+  grid-template-columns: 100%;
+  justify-items: center;
+  place-content: center;
+}

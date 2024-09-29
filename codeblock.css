@@ -1,0 +1,60 @@
+.code-block {
+  background-color: var(--bs-dark);
+  border-radius: var(--bs-border-radius-sm);
+  color: var(--bs-white);
+  padding: .5rem;
+}
+
+.number {
+  color: var(--bs-teal);
+}
+
+.comment {
+  color: var(--bs-gray-500);
+}
+
+.error {
+  text-decoration: underline var(--bs-danger) wavy;
+}
+
+.editor-wrap {
+  font-size: 2rem;
+
+
+}
+
+.editor-wrap>.editor-preformatted-text,
+.editor-wrap>.editor-input {
+  width: 100%;
+  max-width: 100%;
+
+  text-underline-offset: 4px;
+
+  min-height: 3rem;
+  text-decoration-skip-ink: none;
+}
+
+.editor-wrap>.editor-preformatted-text {
+  background-color: var(--bs-dark);
+  border-radius: var(--bs-border-radius-sm);
+  color: var(--bs-white);
+
+  width: 700px;
+}
+
+.editor-wrap .editor-input {
+  background-color: rgba(0, 0, 0, 0);
+  border: 0 none rgba(0, 0, 0, 0);
+  color: rgba(0, 0, 255, 0);
+
+  font-family: var(--bs-font-monospace);
+  font-size: 28px;
+
+  appearance: none;
+  padding: 0;
+  width: 700px;
+}
+
+.editor-wrap .editor-input:focus-visible {
+  outline: rgba(0, 0, 0, 0) none 0;
+}
