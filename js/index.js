@@ -1,6 +1,6 @@
 import {
   generateQuestion,
-  IncorrectError ,
+  IncorrectError,
   isCorrect,
 } from './tenpuzzle.js';
 
@@ -42,11 +42,13 @@ answerForm.addEventListener('submit', event => {
       generateQuestionDiv.classList.remove('d-none');
       questionDiv.classList.add('d-none');
       answerForm.reset();
-editorPre.textContent='';
+      editorPre.textContent = '';
     }
   } catch (error) {
     if (error instanceof IncorrectError) {
       inCorrectModalResultSpan.textContent = `${answer} = ${error.result}`
+    } else {
+      inCorrectModalResultSpan.textContent = '';
     }
     incurrentModal.show()
   }
